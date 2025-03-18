@@ -1,0 +1,53 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT token_id, name, token_nbf, token_exp, allowed_ips, created FROM user_api_token WHERE token_id = $1 AND user_id = $2 AND revoked IS NULL;",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "token_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "token_nbf",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 3,
+        "name": "token_exp",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "allowed_ips",
+        "type_info": "InetArray"
+      },
+      {
+        "ordinal": 5,
+        "name": "created",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "e0971a617c3d6e85ae6119c870f9f7b64075a4c207e3e5f1b515dc6b9ae0c905"
+}

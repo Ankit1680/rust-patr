@@ -1,0 +1,37 @@
+[package]
+description = "A command line tool for managing your Patr resources"
+name = "cli"
+
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "patr"
+path = "src/main.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { workspace = true, features = ["default"] }
+clap = { workspace = true, features = ["default", "derive"] }
+comfy-table = { workspace = true, features = ["default"] }
+config = { workspace = true, features = ["default"] }
+dirs = { workspace = true, features = [] }
+futures = { workspace = true, features = ["default"] }
+http = { workspace = true, features = ["default"] }
+models = { workspace = true, features = [] }
+open = { workspace = true, features = [] }
+preprocess = { workspace = true, features = [] }
+reqwest = { workspace = true, features = ["default", "json"] }
+serde = { workspace = true, features = ["default", "derive"] }
+serde_json = { workspace = true, features = ["default"] }
+tokio = { workspace = true, features = ["default", "full"] }
+tracing = { workspace = true, features = ["default", "async-await"] }
+tracing-log = { workspace = true, features = ["default"] }
+tracing-subscriber = { workspace = true, features = ["default"] }
+url = { workspace = true, features = ["default"] }

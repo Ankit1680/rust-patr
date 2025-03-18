@@ -1,0 +1,112 @@
+version: "3"
+
+networks:
+  vpc:
+
+volumes:
+  postgres-data:
+  grafana-data:
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    user: vscode
+    environment:
+      - PGHOST=postgres
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+    volumes:
+      - ..:/workspace:cached
+      - $HOME/.ssh:/home/vscode/.ssh:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - postgres
+      - redis
+      - tracing
+      - logs
+      - metrics
+    hostname: backend
+    networks:
+      vpc:
+        aliases:
+          - backend
+
+  postgres:
+    image: postgis/postgis:13-master
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=api
+      - PGDATA=/var/lib/postgresql/data
+    expose:
+      - 5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    hostname: postgres
+    networks:
+      vpc:
+        aliases:
+          - postgres
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    expose:
+      - 6379
+    hostname: redis
+    networks:
+      vpc:
+        aliases:
+          - redis
+
+  tracing:
+    image: jaegertracing/all-in-one:1
+    restart: unless-stopped
+    expose:
+      - 4317
+      - 4318
+      - 16686
+    hostname: tracing
+    networks:
+      vpc:
+        aliases:
+          - tracing
+
+  logs:
+    image: grafana/loki:3.2.0
+    restart: unless-stopped
+    expose:
+      - 3100
+    hostname: logs
+    networks:
+      vpc:
+        aliases:
+          - logs
+
+  metrics:
+    image: grafana/mimir:2.13.0
+    restart: unless-stopped
+    expose:
+      - 8080
+    hostname: metrics
+    networks:
+      vpc:
+        aliases:
+          - metrics
+
+  grafana:
+    image: grafana/grafana-oss:11.2.2
+    restart: unless-stopped
+    expose:
+      - 3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+    hostname: grafana
+    networks:
+      vpc:
+        aliases:
+          - grafana
